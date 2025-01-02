@@ -36,6 +36,7 @@ public class ConfiguracoesSeguranca {
                         .permitAll())
                 .logout(logout -> logout.logoutSuccessUrl("/login?logout")
                         .permitAll())
+                .rememberMe(rem -> rem.key("lembrarDeMim").tokenValiditySeconds(604800))
                 .build();
     }
 }
