@@ -1,36 +1,40 @@
 package med.voll.web_application.domain.paciente;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "pacientes")
 public class Paciente {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
     private String email;
     private String telefone;
     private String cpf;
 
-    @Deprecated
-    public Paciente(){}
-
     public Paciente(DadosCadastroPaciente dados) {
-        modificarDados(dados);
+        atualizarDados(dados);
     }
 
-    public void modificarDados(DadosCadastroPaciente dados) {
+    public Paciente(Long idUsuario, DadosCadastroPaciente dados) {
+        this.id = idUsuario;
+        atualizarDados(dados);
+    }
+
+    public void atualizarDados(DadosCadastroPaciente dados) {
         this.nome = dados.nome();
         this.email = dados.email();
         this.telefone = dados.telefone();
         this.cpf = dados.cpf();
     }
+
     public Long getId() {
         return id;
     }
