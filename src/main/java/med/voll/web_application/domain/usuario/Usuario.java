@@ -5,12 +5,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "usuarios")
 @Entity
 public class Usuario implements UserDetails {
@@ -24,6 +28,12 @@ public class Usuario implements UserDetails {
     private String email;
 
     private String senha;
+
+    public Usuario(String nome, String email, String senha) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -42,5 +52,9 @@ public class Usuario implements UserDetails {
 
     public String getNome() {
         return nome;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

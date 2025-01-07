@@ -1,13 +1,16 @@
 package med.voll.web_application.domain.medico;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "medicos")
 public class Medico {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
     private String email;
@@ -19,7 +22,8 @@ public class Medico {
     @Deprecated
     public Medico(){}
 
-    public Medico(DadosCadastroMedico dados) {
+    public Medico(Long idUsuario, DadosCadastroMedico dados) {
+        this.id = idUsuario;
         atualizarDados(dados);
     }
 
