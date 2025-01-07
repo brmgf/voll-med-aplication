@@ -6,8 +6,11 @@ import med.voll.web_application.domain.medico.DadosCadastroMedico;
 import med.voll.web_application.domain.medico.DadosListagemMedico;
 import med.voll.web_application.domain.medico.Especialidade;
 import med.voll.web_application.domain.medico.MedicoService;
+import med.voll.web_application.domain.usuario.Perfil;
+import med.voll.web_application.domain.usuario.Usuario;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +24,7 @@ public class MedicoController {
 
     private static final String PAGINA_LISTAGEM = "medico/listagem-medicos";
     private static final String PAGINA_CADASTRO = "medico/formulario-medico";
+    private static final String PAGINA_ERRO = "erro/500";
     private static final String REDIRECT_LISTAGEM = "redirect:/medicos?sucesso";
 
     private final MedicoService service;
@@ -42,7 +46,11 @@ public class MedicoController {
     }
 
     @GetMapping("formulario")
-    public String carregarPaginaCadastro(Long id, Model model) {
+    public String carregarPaginaCadastro(Long id, Model model, @AuthenticationPrincipal Usuario usuarioLogado) {
+        if (Perfil.PACIENTE.equals(usuarioLogado.getPerfil())) {
+            return PAGINA_ERRO;
+        }
+
         if (id != null) {
             model.addAttribute("dados", service.carregarPorId(id));
         } else {
@@ -53,7 +61,12 @@ public class MedicoController {
     }
 
     @PostMapping
-    public String cadastrar(@Valid @ModelAttribute("dados") DadosCadastroMedico dados, BindingResult result, Model model) {
+    public String cadastrar(@Valid @ModelAttribute("dados") DadosCadastroMedico dados, BindingResult result, Model model,
+                            @AuthenticationPrincipal Usuario usuarioLogado) {
+        if (Perfil.PACIENTE.equals(usuarioLogado.getPerfil())) {
+            return PAGINA_ERRO;
+        }
+
         if (result.hasErrors()) {
             model.addAttribute("dados", dados);
             return PAGINA_CADASTRO;
@@ -70,7 +83,11 @@ public class MedicoController {
     }
 
     @DeleteMapping
-    public String excluir(Long id) {
+    public String excluir(Long id, @AuthenticationPrincipal Usuario usuarioLogado) {
+        if (Perfil.MEDICO.equals(usuarioLogado.getPerfil()) || Perfil.PACIENTE.equals(usuarioLogado.getPerfil())) {
+            return PAGINA_ERRO;
+        }
+
         service.excluir(id);
         return REDIRECT_LISTAGEM;
     }

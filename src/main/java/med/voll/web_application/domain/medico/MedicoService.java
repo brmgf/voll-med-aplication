@@ -3,6 +3,7 @@ package med.voll.web_application.domain.medico;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import med.voll.web_application.domain.RegraDeNegocioException;
+import med.voll.web_application.domain.usuario.Perfil;
 import med.voll.web_application.domain.usuario.UsuarioService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +29,7 @@ public class MedicoService {
         }
 
         if (dados.id() == null) {
-            Long idUsuario = usuarioService.salvar(dados.nome(), dados.email(), dados.crm());
+            Long idUsuario = usuarioService.salvar(dados.nome(), dados.email(), dados.crm(), Perfil.MEDICO);
             repository.save(new Medico(idUsuario, dados));
         } else {
             var medico = repository.findById(dados.id()).orElseThrow();
