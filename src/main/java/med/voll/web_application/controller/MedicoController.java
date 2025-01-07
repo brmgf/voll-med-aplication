@@ -39,7 +39,11 @@ public class MedicoController {
     }
 
     @GetMapping
-    public String carregarPaginaListagem(@PageableDefault Pageable paginacao, Model model) {
+    public String carregarPaginaListagem(@PageableDefault Pageable paginacao, Model model, @AuthenticationPrincipal Usuario usuarioLogado) {
+        if (Perfil.MEDICO.equals(usuarioLogado.getPerfil())) {
+            return PAGINA_ERRO;
+        }
+
         var medicosCadastrados = service.listar(paginacao);
         model.addAttribute("medicos", medicosCadastrados);
         return PAGINA_LISTAGEM;
