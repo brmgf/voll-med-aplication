@@ -6,6 +6,7 @@ import med.voll.web_application.domain.paciente.DadosCadastroPaciente;
 import med.voll.web_application.domain.paciente.PacienteService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+@PreAuthorize("hasRole('ATENDENTE')")
 @Controller
 @RequestMapping("pacientes")
 public class PacienteController {

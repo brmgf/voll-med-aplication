@@ -9,6 +9,7 @@ import med.voll.web_application.domain.medico.MedicoService;
 import med.voll.web_application.domain.usuario.Usuario;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,6 +43,7 @@ public class MedicoController {
         return Especialidade.values();
     }
 
+    @PreAuthorize("hasRole('ATENDENTE') OR hasRole('PACIENTE')")
     @GetMapping
     public String carregarPaginaListagem(@PageableDefault Pageable paginacao, Model model, @AuthenticationPrincipal Usuario usuarioLogado) {
         var medicosCadastrados = service.listar(paginacao);
@@ -49,6 +51,7 @@ public class MedicoController {
         return PAGINA_LISTAGEM;
     }
 
+    @PreAuthorize("hasRole('ATENDENTE')")
     @GetMapping("formulario")
     public String carregarPaginaCadastro(Long id, Model model, @AuthenticationPrincipal Usuario usuarioLogado) {
         if (id != null) {
@@ -60,6 +63,7 @@ public class MedicoController {
         return PAGINA_CADASTRO;
     }
 
+    @PreAuthorize("hasRole('ATENDENTE')")
     @PostMapping
     public String cadastrar(@Valid @ModelAttribute("dados") DadosCadastroMedico dados, BindingResult result, Model model,
                             @AuthenticationPrincipal Usuario usuarioLogado) {
@@ -78,6 +82,7 @@ public class MedicoController {
         }
     }
 
+    @PreAuthorize("hasRole('ATENDENTE')")
     @DeleteMapping
     public String excluir(Long id, @AuthenticationPrincipal Usuario usuarioLogado) {
         service.excluir(id);
